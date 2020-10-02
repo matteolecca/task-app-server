@@ -10,9 +10,9 @@ exports.getUsers = ((callback)=>{
 })
 
 exports.createUser = ((user,callback)=>{
-    let query = "INSERT INTO users (email,name,password) "
+    let query = "INSERT INTO users (email,name,password,hoursperday) "
     query += "VALUES (?,?,?)"
-    db.query(query, [user.email,user.name,user.password],(error,result)=>{
+    db.query(query, [user.email,user.name,user.password,user.hoursperday],(error,result)=>{
         if (error) return callback(error, undefined)
         else return callback(undefined,result)
     })
