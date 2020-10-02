@@ -27,14 +27,12 @@ router.post('/user', async (req, res) => {
             if (result) {
                 user.ID = result.insertId
                 user.hoursperday = parseInt(user.hoursperday)
-                delete user.password
                 req.session.user = user
                 req.opp = 1
                 return res.status(200).send(user)
             }
             else if (error) {
                 console.log(error)
-
                 return res.status(400).send({ error: "Something went wrong insertin new user" })
 
             }

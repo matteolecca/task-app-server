@@ -53,6 +53,7 @@ router.post('/deleteTask', async (req, res) => {
     if (!req.session.user) {
         res.status(400).send("Please login again")
     }
+    console.log(req.body.ID)
     database.deleteTask(req.session.user.ID,req.body.ID,(error, result) => {
         if (error) {
             return res.status(400).send(error)

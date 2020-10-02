@@ -11,8 +11,8 @@ exports.getUsers = ((callback)=>{
 
 exports.createUser = ((user,callback)=>{
     let query = "INSERT INTO users (email,name,password,hoursperday) "
-    query += "VALUES (?,?,?)"
-    db.query(query, [user.email,user.name,user.password,user.hoursperday],(error,result)=>{
+    query += "VALUES (?,?,?,?)"
+    db.query(query, [user.email, user.name, user.password, user.hoursperday],(error,result)=>{
         if (error) return callback(error, undefined)
         else return callback(undefined,result)
     })
@@ -60,9 +60,8 @@ exports.updateTaskHours = ((data, callback) => {
     })
 })
 exports.deleteTask = ((user,ID,callback) => {
-    let query = "DELETE FROM tasks where user = 1 AND ID = ?"
-    
-    db.query(query,[ID], (error, result) => {
+    let query = "DELETE FROM tasks where user = ? AND ID = ?"
+    db.query(query,[user,ID], (error, result) => {
         if (error) return callback(error, undefined)
         else return callback(undefined, result)
     })
