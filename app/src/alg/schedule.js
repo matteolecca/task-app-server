@@ -6,7 +6,7 @@ exports.scheduleTasks = ((user, callback) => {
     user.hoursperday = parseInt(user.hoursperday)
     let tasks = []
     //Filter user task to get only actives
-    database.getFilteredTasks(user, (list, error) => {
+    database.getFilteredTasks(user,(list, error) => {
         if (error) return ({ error: "Unexpected SQL error happened", errCODE: error })
         //If the list is empty return
         if (list.length < 1) {
@@ -47,6 +47,8 @@ exports.scheduleTasks = ((user, callback) => {
                     hoursPerDay += user.hoursperday - hourUsed
                 }
             }
+            element.hoursperday = hoursPerDay
+            console.log(element)
             //Add task id and relative hours per day to object data
             let data = { hoursPerDay: hoursPerDay, ID: element.ID }
             //Push object to tasks array
@@ -58,6 +60,6 @@ exports.scheduleTasks = ((user, callback) => {
             })
         })
         //Return tasks via callback -> Used only in testing
-        callback(tasks)
+        callback(list)
     })
 })

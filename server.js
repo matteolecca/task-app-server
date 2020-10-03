@@ -19,9 +19,6 @@ app.use(userRouter)
 app.use(taskRouter)
 
 // simple route
-app.get("/", (req, res) => {
-    res.json({ message: "Welcome to bezkoder application." });
-});
 
 
 // set port, listen for requests

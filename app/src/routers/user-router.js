@@ -14,13 +14,12 @@ router.get('/users', (req, res) => {
 })
 
 router.get('/', (req, res) => {
-    console.log("req.session.user")
     console.log(req.session.user)
     res.send(req.session.user)
 })
 
 router.post('/user', async (req, res) => {
-    console.log(req.body)
+    
     try {
         let user = await User.user(req.body)
         database.createUser(user, (error, result) => {
@@ -29,6 +28,7 @@ router.post('/user', async (req, res) => {
                 user.hoursperday = parseInt(user.hoursperday)
                 req.session.user = user
                 req.opp = 1
+                console.log(user)
                 return res.status(200).send(user)
             }
             else if (error) {
