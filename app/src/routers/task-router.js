@@ -44,10 +44,20 @@ router.get('/tasks', async (req, res) => {
                 return res.status(400).send(error)
             }
         return res.send(schedule)
-           
         })
     })
-   
+})
+router.get('/allTasks', async (req, res) => {
+    console.log("Get task")
+    if (!req.session.user) {
+        return res.status(400).send("Please login again")
+    }
+        database.getUserTasks( req.session.user.ID, (error, result) => {
+            if (error) {              
+                return res.status(400).send(error)
+            }
+        return res.send(result)     
+    })
 })
 router.post('/deleteTask', async (req, res) => {
     if (!req.session.user) {
