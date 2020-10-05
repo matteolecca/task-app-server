@@ -110,3 +110,26 @@ exports.updateUser = ((user, callback) => {
         return callback()
     })
 })
+
+exports.updateUserData = ((data, dataType,ID, callback) =>{
+    console.log(data,dataType)
+    let query = getQuery(dataType)
+    let datas = [ data, ID]
+    db.query(query, datas, function (error,result) {
+        if (error) return callback(error)
+        return callback(result)
+    })
+})
+
+let getQuery = (dataType) =>{
+    switch (dataType) {
+        case "name":
+            return "UPDATE users set name = ? WHERE ID = ?"
+        case "email":
+            return "UPDATE users set email = ? WHERE ID = ?"
+        case "hoursperday":
+            return "UPDATE users set hoursperday = ? WHERE ID = ?"
+        default:
+            return 
+    }
+}

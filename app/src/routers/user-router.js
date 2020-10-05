@@ -94,3 +94,14 @@ router.post('/update', async (req, res)=>{
         }
     })
 })
+
+
+router.post('/updateUser', async (req, res) => {
+    if(req.session.user == undefined)return res.status(400).send()
+    let value = req.body.value
+    let type = req.body.type
+    database.updateUserData(value,type,req.session.user.ID,(result,error)=>{
+       if(error) return res.status(400).send()
+       return res.send()
+    })
+})
