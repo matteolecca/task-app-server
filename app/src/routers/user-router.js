@@ -70,3 +70,27 @@ router.post('/login', async (req, res) => {
     })
 })
 module.exports = router
+
+//Update request sent when user change information
+router.post('/update', async (req, res)=>{
+    let user
+    try {
+        //Validate values inserted
+        //Store result in user variable
+        user = await User.userUpdate(req.body,req.session.user.ID)
+    } catch (error) {
+        return res.status(400).send({ error: "Invalid email" })
+    }
+    //Database function to update user record
+    db.updateUser(user, (error)=>{
+        if (error) return res.status(400).send(error)
+        else {
+            //User info modified therefore new scheduling needed       
+            scheduler.scheduleTasks(user, () => {
+                req.session.user.hoursperday = parseInt(req.body.hoursperday)
+                req.session.opp = 1
+                return res.send(user)
+            })
+        }
+    })
+})

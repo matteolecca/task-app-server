@@ -34,21 +34,16 @@ router.post('/task', async (req, res) => {
     })
 })
 router.get('/tasks', async (req, res) => {
-    console.log("Get task")
     if (!req.session.user) {
         return res.status(400).send("Please login again")
     }
     scheduler.scheduleTasks(req.session.user, (schedule) => {
-        database.getUserTasks( req.session.user.ID, (error, result) => {
-            if (error) {              
-                return res.status(400).send(error)
-            }
         return res.send(schedule)
-        })
     })
 })
+
+
 router.get('/allTasks', async (req, res) => {
-    console.log("Get task")
     if (!req.session.user) {
         return res.status(400).send("Please login again")
     }
@@ -63,7 +58,6 @@ router.post('/deleteTask', async (req, res) => {
     if (!req.session.user) {
         res.status(400).send("Please login again")
     }
-    console.log(req.body.ID)
     database.deleteTask(req.session.user.ID,req.body.ID,(error, result) => {
         if (error) {
             return res.status(400).send(error)
@@ -80,7 +74,9 @@ router.post('/editTask', (req, res) => {
     //Add user value
     query.user = req.session.user.ID
     query.ID = parseInt(req.body.ID)
-
+    query.start_date =  dateFormat(req.body.start_date, "yyyy-mm-dd")
+    query.end_date =  dateFormat(req.body.end_date, "yyyy-mm-dd")
+    console.log(query)
     //Database function to update task
     database.updateTask(query, (result, error) => {
         if (error) {
@@ -88,7 +84,6 @@ router.post('/editTask', (req, res) => {
         }
         //Tasks list modified therefore new scheduling needed 
         scheduler.scheduleTasks(req.session.user, (schedule) => {
-            console.log("Result")
             return res.send(result)
         })
     })

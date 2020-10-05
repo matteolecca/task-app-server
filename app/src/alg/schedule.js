@@ -10,7 +10,7 @@ exports.scheduleTasks = ((user, callback) => {
         if (error) return ({ error: "Unexpected SQL error happened", errCODE: error })
         //If the list is empty return
         if (list.length < 1) {
-            callback()
+            callback([])
             return
         }
         //Get most closer deadline

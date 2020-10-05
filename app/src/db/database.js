@@ -99,3 +99,13 @@ exports.updateTask = ((task, callback) => {
         return callback(result)
     })
 })
+
+//Update user data
+exports.updateUser = ((user, callback) => {
+    let query = "UPDATE users set name = ?, hoursperday = ?, email = ? where users.email = ?"
+    let data = [user.name, user.hoursperday, user.email, user.email]
+    db.query(query, data, function (err) {
+        if (err) return callback(err)
+        return callback()
+    })
+})
