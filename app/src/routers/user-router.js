@@ -4,6 +4,7 @@ const database = require('../db/database')
 const User = require('../models/user')
 const bycript = require('bcrypt')
 const { use } = require('bcrypt/promises')
+const scheduler = require('../alg/schedule')
 
 router.get('/users', (req, res) => {
     database.getUsers((result, error) => {
@@ -102,6 +103,14 @@ router.post('/updateUser', async (req, res) => {
     let type = req.body.type
     database.updateUserData(value,type,req.session.user.ID,(result,error)=>{
        if(error) return res.status(400).send()
-       return res.send()
+       else{
+           if(type == "hoursperday"){
+               scheduler.scheduleTasks((schedule)=>{
+                return res.send()
+               })
+           }
+           return res.send()
+       }
+       
     })
 })
