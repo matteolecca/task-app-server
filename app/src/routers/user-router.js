@@ -106,6 +106,9 @@ router.post('/updateUser', async (req, res) => {
        else{
            if(type == "hoursperday"){
                req.session.user.hoursperday = parseInt(value)
+               scheduler.scheduleTasks(()=>{
+                   return res.send()
+               })
            }
            return res.send()
        }
