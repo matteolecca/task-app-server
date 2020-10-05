@@ -28,13 +28,13 @@ exports.getUser = ((email, callback) => {
 
 //Create new task
 exports.createTask = ((task, hoursperday, callback) => {
-    let query = "INSERT INTO tasks (start_date, end_date, text, color, user, deadline, priority, mintimeperday)"
-    query += "VALUES (? ,?, ?, ?, ?, ?, ?, ?)"
+    let query = "INSERT INTO tasks (start_date, end_date, text, color, user, deadline, priority, mintimeperday) VALUES (? ,?, ?, ?, ?, ?, ?, ?)"
+    // query += ""
     let end_date = new Date(task.end_date);
     let start_date = new Date(task.start_date);
     let Difference_In_Time = end_date.getTime() - start_date.getTime();
     let Difference_In_Days = (Difference_In_Time / (1000 * 3600 * 24)) * hoursperday ;
-    db.query(query, [task.start_date, task.end_date, task.text, task.color, task.user, Difference_In_Days , task.priority, 1], function (error, result) {
+    db.query(query, [task.start_date, task.end_date, task.text, task.color, task.user, Difference_In_Days + hoursperday, task.priority, 1], function (error, result) {
         if (error) {
             return callback(error)
         }
