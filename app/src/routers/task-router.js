@@ -21,7 +21,7 @@ router.post('/task', async (req, res) => {
     query.start_date =  dateFormat(req.body.start_date, "yyyy-mm-dd")
     query.end_date =  dateFormat(req.body.end_date, "yyyy-mm-dd")
     
-    
+    console.log(query)
     //Call createTask database method
     database.createTask(query, req.session.user.hoursperday, (result, error) => {
         if (error) {
@@ -75,6 +75,9 @@ router.post('/editTask', (req, res) => {
     query.ID = parseInt(req.body.ID)
     query.start_date =  dateFormat(req.body.start_date, "yyyy-mm-dd")
     query.end_date =  dateFormat(req.body.end_date, "yyyy-mm-dd")
+
+    console.log(query)
+
     //Database function to update task
     database.updateTask(query,req.session.user.hoursperday, (result, error) => {
         if (error) {
