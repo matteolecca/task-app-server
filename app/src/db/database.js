@@ -34,7 +34,7 @@ exports.createTask = ((task, hoursperday, callback) => {
     let start_date = new Date(task.start_date);
     let Difference_In_Time = end_date.getTime() - start_date.getTime();
     let Difference_In_Days = (Difference_In_Time / (1000 * 3600 * 24)) * hoursperday ;
-    db.query(query, [task.start_date, task.end_date, task.text, task.color, task.user, Difference_In_Days + 1, task.priority, 1], function (error, result) {
+    db.query(query, [task.start_date, task.end_date, task.text, task.color, task.user, Difference_In_Days + hoursperday, task.priority, 1], function (error, result) {
         if (error) {
             return callback(error)
         }
@@ -93,7 +93,7 @@ exports.updateTask = ((task, hoursperday,callback) => {
     let date2 = new Date(task.start_date);
     let Difference_In_Time = date1.getTime() - date2.getTime();
     let Difference_In_Days = (Difference_In_Time / (1000 * 3600 * 24)) * hoursperday;
-    let data = [task.start_date, task.end_date, task.text, task.priority, Difference_In_Days + 1,task.color, task.user, task.ID]
+    let data = [task.start_date, task.end_date, task.text, task.priority, Difference_In_Days + hoursperday,task.color, task.user, task.ID]
     db.query(query, data, function (error, result) {
         if (error) return callback(error)
         return callback(result)
