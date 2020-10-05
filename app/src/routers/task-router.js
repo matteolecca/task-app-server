@@ -13,15 +13,14 @@ router.post('/task', async (req, res) => {
     if (!req.session.user) {
         return res.status(400).send("Please login again")
     }
-    const query = {
-        start_date: dateFormat(req.body.start_date, "yyyy-mm-dd"),
-        end_date: dateFormat(req.body.end_date, "yyyy-mm-dd"),
-        text: req.body.text,
-        color: req.body.color,
-        user: req.session.user.ID,
-        priority: req.body.priority,
-        mintimeperday : 1
-    }
+    
+    let query = Object.assign({}, req.body)
+    //Add user value
+    query.user = req.session.user.ID
+    
+    query.start_date =  dateFormat(req.body.start_date, "yyyy-mm-dd")
+    query.end_date =  dateFormat(req.body.end_date, "yyyy-mm-dd")
+    
     
     //Call createTask database method
     database.createTask(query, req.session.user.hoursperday, (result, error) => {
