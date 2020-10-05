@@ -27,9 +27,9 @@ router.post('/task', async (req, res) => {
         if (error) {
             return res.status(400).send(error)
         }
-        scheduler.scheduleTasks(req.session.user, (schedule) => {
+        // scheduler.scheduleTasks(req.session.user, (schedule) => {
             return res.status(200).send(result)
-        })
+        // })
     })
 })
 router.get('/tasks', async (req, res) => {
