@@ -110,7 +110,10 @@ router.post('/updateUser', async (req, res) => {
     }
     database.updateUserData(value,type,req.session.user.ID,(result,error)=>{
        if(error) return res.status(400).send()
-        return res.send()
+            scheduler.scheduleTasks(req.session.user, (schedule) => {
+            return res.send()
+       })
+        
     })
 })
 
