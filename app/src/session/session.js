@@ -2,7 +2,7 @@ const session = require('express-session')
 
 exports.session = session({
     secret: 'mysecret',
-    resave: false,
+    resave: true,
     saveUninitialized: true,
     cookie: {
         //Store cookie one year

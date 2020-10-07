@@ -129,6 +129,8 @@ let getQuery = (dataType) =>{
             return "UPDATE users set email = ? WHERE ID = ?"
         case "hoursperday":
             return "UPDATE users set hoursperday = ? WHERE ID = ?"
+        case "password":
+            return "UPDATE users set password = ? WHERE ID = ?"
         default:
             return 
     }
