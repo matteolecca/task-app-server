@@ -105,6 +105,9 @@ router.post('/updateUser', async (req, res) => {
     if(type === "password") {
         value  = await bycript.hash(req.body.value, 8)
     }
+    if(type === "hoursperday"){
+        req.session.user.hoursperday = value
+    }
     database.updateUserData(value,type,req.session.user.ID,(result,error)=>{
        if(error) return res.status(400).send()
         return res.send()
