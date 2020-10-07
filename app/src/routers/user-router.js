@@ -33,7 +33,6 @@ router.post('/user', async (req, res) => {
                 return res.status(200).send(user)
             }
             else if (error) {
-                console.log(error)
                 return res.status(400).send({ error: "Something went wrong insertin new user" })
 
             }
