@@ -106,6 +106,7 @@ exports.updateTask = ((task, hoursperday,callback) => {
     let data = [task.start_date, task.end_date, task.text, task.priority, Difference_In_Days ,task.color, task.user, task.ID]
     db.query(query, data, function (error, result) {
         if (error) return callback(error)
+        console.log({result : result})
         return callback(result)
     })
 })
@@ -121,7 +122,6 @@ exports.updateUser = ((user, callback) => {
 })
 
 exports.updateUserData = ((data, dataType,ID, callback) =>{
-    console.log(data,dataType)
     let query = getQuery(dataType)
     let datas = [ data, ID]
     db.query(query, datas, function (error,result) {

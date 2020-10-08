@@ -48,7 +48,6 @@ exports.scheduleTasks = ((user, callback) => {
                 }
             }
             element.hoursperday = hoursPerDay
-            console.log(element)
             //Add task id and relative hours per day to object data
             let data = { hoursPerDay: hoursPerDay, ID: element.ID }
             //Push object to tasks array

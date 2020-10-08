@@ -10,7 +10,6 @@ const TokenGenerator = require('uuid-token-generator');
 
 router.get('/users', (req, res) => {
     database.getUsers((result, error) => {
-        console.log(result)
         if (result) return res.send({ users: result })
         res.status(400).send({ error: "Something went wrong" })
     })
@@ -30,7 +29,6 @@ router.post('/user', async (req, res) => {
         let user = await User.user(req.body)
         const tokenGen = new TokenGenerator()
         user.token = tokenGen.generate()
-        console.log({user:user})
         database.createUser(user, (error, result) => {
             if (result) {
                 user.ID = result.insertId
@@ -53,7 +51,6 @@ router.post('/user', async (req, res) => {
 
 router.post('/login', async (req, res) => {
 
-    console.log(req.body)
     database.getUser(req.body.email, (error, result) => {
         if (result) {
             try{
