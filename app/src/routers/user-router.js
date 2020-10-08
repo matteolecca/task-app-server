@@ -16,6 +16,7 @@ router.get('/users', (req, res) => {
     })
 })
 
+
 router.post('/', (req, res) => {
     database.checkToken(req.body.token, (error,result)=>{
        if(error) return res.status(400).send()
