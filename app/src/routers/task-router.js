@@ -35,9 +35,9 @@ router.get('/tasks', async (req, res) => {
     if (!req.session.user) {
         return res.status(400).send("Please login again")
     }
-    scheduler.scheduleTasks(req.session.user, (schedule) => {
+    //scheduler.scheduleTasks(req.session.user, (schedule) => {
         return res.send(schedule)
-    })
+    //})
 })
 
 
