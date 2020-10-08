@@ -26,18 +26,18 @@ router.post('/task', async (req, res) => {
         if (error) {
             return res.status(400).send(error)
         }
-        scheduler.scheduleTasks(req.session.user, (schedule) => {
+        //scheduler.scheduleTasks(req.session.user, (schedule) => {
             return res.status(200).send(result)
-        })
+       // })
     })
 })
 router.get('/tasks', async (req, res) => {
     if (!req.session.user) {
         return res.status(400).send("Please login again")
     }
-    //scheduler.scheduleTasks(req.session.user, (schedule) => {
+    scheduler.scheduleTasks(req.session.user, (schedule) => {
         return res.send(schedule)
-    //})
+    })
 })
 
 
@@ -83,9 +83,9 @@ router.post('/editTask', (req, res) => {
             return res.send(error)
         }
         //Tasks list modified therefore new scheduling needed 
-        scheduler.scheduleTasks(req.session.user, (schedule) => {
+        //scheduler.scheduleTasks(req.session.user, (schedule) => {
             return res.send(result)
-        })
+        //})
     })
 })
 
