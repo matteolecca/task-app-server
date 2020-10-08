@@ -5,6 +5,8 @@ const User = require('../models/user')
 const bycript = require('bcrypt')
 const { use } = require('bcrypt/promises')
 const scheduler = require('../alg/schedule')
+const TokenGenerator = require('uuid-token-generator');
+
 
 router.get('/users', (req, res) => {
     database.getUsers((result, error) => {
@@ -14,22 +16,27 @@ router.get('/users', (req, res) => {
     })
 })
 
-router.get('/', (req, res) => {
-    console.log(req.session.user)
-    res.send(req.session.user)
+router.post('/', (req, res) => {
+    database.checkToken(req.body.token, (error,result)=>{
+       if(error) return res.status(400).send()
+       req.session.user = result
+       console.log(req.session.user)
+        return res.send(result[0])
+    })
 })
 
 router.post('/user', async (req, res) => {
-    
     try {
         let user = await User.user(req.body)
+        const tokenGen = new TokenGenerator()
+        user.token = tokenGen.generate()
+        console.log({user:user})
         database.createUser(user, (error, result) => {
             if (result) {
                 user.ID = result.insertId
                 user.hoursperday = parseInt(user.hoursperday)
                 req.session.user = user
                 req.opp = 1
-                console.log(user)
                 return res.status(200).send(user)
             }
             else if (error) {

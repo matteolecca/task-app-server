@@ -10,9 +10,9 @@ exports.getUsers = ((callback)=>{
 })
 
 exports.createUser = ((user,callback)=>{
-    let query = "INSERT INTO users (email,name,password,hoursperday) "
-    query += "VALUES (?,?,?,?)"
-    db.query(query, [user.email, user.name, user.password, user.hoursperday],(error,result)=>{
+    let query = "INSERT INTO users (email,name,password,hoursperday,token) "
+    query += "VALUES (?,?,?,?,?)"
+    db.query(query, [user.email, user.name, user.password, user.hoursperday,user.token],(error,result)=>{
         if (error) return callback(error, undefined)
         else return callback(undefined,result)
     })
@@ -26,6 +26,15 @@ exports.getUser = ((email, callback) => {
     })
 })
 
+
+
+exports.checkToken = ((token, callback) => {
+    let query = "SELECT * FROM users where token = ? "
+    db.query(query, token, (error, result) => {
+        if (error) return callback(error, undefined)
+        else return callback(undefined, result)
+    })
+})
 //Create new task
 exports.createTask = ((task, hoursperday, callback) => {
     let query = "INSERT INTO tasks (start_date, end_date, text, color, user, deadline, priority, mintimeperday) VALUES (? ,?, ?, ?, ?, ?, ?, ?)"
