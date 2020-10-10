@@ -144,3 +144,14 @@ let getQuery = (dataType) =>{
             return 
     }
 }
+
+//Update user password
+//Used when client forgot email
+exports.updatePasswordUser = ((user, callback) => {
+    let query = "UPDATE users set password = ? where users.email = ?"
+    let data = [user.password, user.email]
+    db.query(query, data, function (err, result) {
+        if (err) return callback(err)
+        return callback(result.affectedRows)
+    })
+})

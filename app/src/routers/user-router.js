@@ -126,3 +126,4 @@ router.post('/logout', async (req, res) => {
     req.session.user = undefined
     res.send()
 })
+

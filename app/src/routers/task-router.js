@@ -32,6 +32,7 @@ router.post('/task', async (req, res) => {
     })
 })
 router.get('/tasks', async (req, res) => {
+    console.log(req.session.user)
     if (!req.session.user) {
         return res.status(400).send("Please login again")
     }

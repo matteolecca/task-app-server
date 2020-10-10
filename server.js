@@ -5,7 +5,7 @@ const bycript = require('bcrypt')
 const app = express();
 const userRouter = require('./app/src/routers/user-router')
 const taskRouter = require('./app/src/routers/task-router')
-
+const emailRouter = require('./app/src/routers/password-recovery-router')
 const session = require('./app/src/session/session')
 const { __esModule } = require("validator/lib/isAlpha");
 // parse requests of content-type - application/json
@@ -17,7 +17,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(userRouter)
 //Tasks requests
 app.use(taskRouter)
-
+app.use(emailRouter)
 // simple route
 
 
