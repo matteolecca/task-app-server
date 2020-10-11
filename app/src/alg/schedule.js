@@ -4,15 +4,19 @@ var rounder = require("./round")
 exports.scheduleTasks = ((user, callback) => {
     //Get user hoursperday 
     user.hoursperday = parseInt(user.hoursperday)
+    console.log(user.hoursperday)
     let tasks = []
     //Filter user task to get only actives
-    database.getFilteredTasks(user,(list, error) => {
+
+    database.getFilteredTasks(user.ID,(list, error) => {
+        
         if (error) return ({ error: "Unexpected SQL error happened", errCODE: error })
         //If the list is empty return
         if (list.length < 1) {
             callback([])
             return
         }
+        
         //Get most closer deadline
         //Task list sorted by closer deadline
         let timeslot = list[0].deadline
@@ -32,6 +36,7 @@ exports.scheduleTasks = ((user, callback) => {
         //Convert time in numer of days
         let numDays = timeslot / parseInt(user.hoursperday)
         var hourUsed = 0
+        var tasksUpdated = 0
          list.forEach(async (element, index, list) => {
             //Get hours per day for each task
             var hoursPerDay = element.time / numDays
@@ -52,13 +57,24 @@ exports.scheduleTasks = ((user, callback) => {
             let data = { hoursPerDay: hoursPerDay, ID: element.ID }
             //Push object to tasks array
             tasks.push(data)
+
+           
             //Update task record into the database
-            database.updateTaskHours(data, (result,error) => {
-                if (error) console.log({ error: "Unexpected SQL error happened", errCODE: error })
-                return
+             database.updateTaskHours(data, (error,result) => {
+                //  console.log(error,result)
+                if (error) {
+                    console.log({ error: "Unexpected SQL error happened", errCODE: error })
+                    callback(error)
+                }
+                else{
+                    tasksUpdated++;
+                    if(tasksUpdated === list.length){
+                        callback()
+                    }
+                }
             })
         })
         //Return tasks via callback -> Used only in testing
-        callback(list)
+        
     })
 })

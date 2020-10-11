@@ -32,12 +32,23 @@ router.post('/task', async (req, res) => {
     })
 })
 router.get('/tasks', async (req, res) => {
-    
     if (!req.session.user) {
         return res.status(400).send("Please login again")
     }
-    scheduler.scheduleTasks(req.session.user, (schedule) => {
-        return res.send(schedule)
+    scheduler.scheduleTasks(req.session.user, (error) => {
+        if(error){
+            console.log(error)
+            return res.status(400).send()
+        }
+        database.getFilteredTasks(req.session.user.ID, (result,error)=>{
+            if(error) {
+                return res.status(400).send()
+            }
+            else {
+                // console.log(result)
+                return res.send(result)
+            }
+        })
     })
 })
 

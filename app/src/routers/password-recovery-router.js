@@ -42,7 +42,6 @@ transporter.use("compile", hbs(options));
 
 //Post request received when user reset his password
 router.post('/resetpwd', async (req, res) => {
-   console.log(req.body)
    //Generate random password
    let pass = Math.random().toString(36).substring(3)
    //Create user object

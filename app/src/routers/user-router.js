@@ -17,6 +17,7 @@ router.get('/users', (req, res) => {
 
 
 router.post('/', (req, res) => {
+    console.log("Token chehcjed")
     database.checkToken(req.body.token, (error,result)=>{
        if(error) return res.status(400).send()
        req.session.user = result[0]
