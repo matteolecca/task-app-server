@@ -20,9 +20,9 @@ router.post('/', (req, res) => {
     console.log("Token chehcjed")
     database.checkToken(req.body.token, (error,result)=>{
        if(error) return res.status(400).send()
-       req.session.user = result[0].user
+       req.session.user = result[0]
        req.opp = 1
-       return res.send(result[0].user)
+       return res.send(result[0])
     })
 })
 
