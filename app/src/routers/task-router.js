@@ -37,7 +37,7 @@ router.get('/tasks', async (req, res) => {
     }
     scheduler.scheduleTasks(req.session.user, (error) => {
         if(error){
-            console.log(error)
+            console.log({error : error})
             return res.status(400).send()
         }
         database.getFilteredTasks(req.session.user.ID, (result,error)=>{
