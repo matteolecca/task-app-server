@@ -40,7 +40,7 @@ router.get('/tasks', async (req, res) => {
             console.log({error : error})
             return res.status(400).send()
         }
-        database.getFilteredTasks(req.session.user.ID, (result,error)=>{
+        database.getFilteredTasksSorted(req.session.user.ID, (result,error)=>{
             if(error) {
                 return res.status(400).send()
             }

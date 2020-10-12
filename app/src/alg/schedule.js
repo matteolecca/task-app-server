@@ -9,29 +9,38 @@ exports.scheduleTasks = ((user, callback) => {
     //Filter user task to get only actives
 
     database.getFilteredTasks(user.ID,(list, error) => {
-        
         if (error) return ({ error: "Unexpected SQL error happened", errCODE: error })
         //If the list is empty return
         if (list.length < 1) {
             callback()
             return 
         }
-        console.log()
+        list.forEach(element => {
+            if(element.deadline < 1){
+                element.deadline = user.hoursperday
+            }
+        });
         //Get most closer deadline
         //Task list sorted by closer deadline
         let timeslot = list[0].deadline
         let sumPriority = 0
         //For each task of the list
+       
+
         list.forEach(element => {
             //Calculate newPriority
             element.newPriority = timeslot / element.deadline * element.priority
+            console.log(element.newPriority)
             //Get total sum for all tasks
             sumPriority += element.newPriority
         });
+
         const average = timeslot / sumPriority
+        console.log({timeslot : timeslot, sumpriority : sumPriority})
         list.forEach(element => {
             //Set total time for task expressed in hours
             element.time = average * element.newPriority
+           
         });
         //Convert time in numer of days
         let numDays = timeslot / parseInt(user.hoursperday)
@@ -53,6 +62,7 @@ exports.scheduleTasks = ((user, callback) => {
                 }
             }
             element.hoursperday = hoursPerDay
+            
             //Add task id and relative hours per day to object data
             let data = { hoursPerDay: hoursPerDay, ID: element.ID }
             //Push object to tasks array

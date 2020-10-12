@@ -96,6 +96,15 @@ exports.getFilteredTasks = ((ID, callback) => {
     })
 })
 
+//Get only active tasks
+exports.getFilteredTasksSorted = ((ID, callback) => {
+    let today = dateFormat(new Date().toString(), "yyyy-mm-dd")
+    let query = "SELECT * FROM tasks WHERE user = ? and DATE(start_date) <= ? and DATE(end_date) >= ? ORDER BY  hoursperday DESC"
+    db.query(query, [ID, today, today], function (error, list) {
+        if (error) return console.log({ error: error })
+        return callback(list)
+    })
+})
 //Update single task
 exports.updateTask = ((task, hoursperday,callback) => {
     let query = "UPDATE tasks set start_date = ?, end_date = ?, text = ?, priority = ?, deadline = ?, color = ? where user = ? and ID = ?"
