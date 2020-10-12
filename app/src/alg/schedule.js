@@ -16,7 +16,7 @@ exports.scheduleTasks = ((user, callback) => {
             callback()
             return 
         }
-        
+        console.log()
         //Get most closer deadline
         //Task list sorted by closer deadline
         let timeslot = list[0].deadline
@@ -57,7 +57,6 @@ exports.scheduleTasks = ((user, callback) => {
             let data = { hoursPerDay: hoursPerDay, ID: element.ID }
             //Push object to tasks array
             tasks.push(data)
-
            
             //Update task record into the database
              database.updateTaskHours(data, (error,result) => {
