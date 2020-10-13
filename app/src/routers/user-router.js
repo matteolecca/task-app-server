@@ -124,6 +124,7 @@ router.post('/updateUser', async (req, res) => {
 })
 
 router.post('/logout', async (req, res) => {
+    console.log(req.session)
     delete req.session.user 
     console.log(req.session)
     res.send()
