@@ -8,6 +8,14 @@ const taskRouter = require('./app/src/routers/task-router')
 const emailRouter = require('./app/src/routers/password-recovery-router')
 const session = require('./app/src/session/session')
 const { __esModule } = require("validator/lib/isAlpha");
+
+//Select website that can access the API
+const cors = require('cors')
+var corsOptions = {
+    origin: 'http://localhost:3000'
+}
+app.use(cors(corsOptions));
+
 // parse requests of content-type - application/json
 app.use(bodyParser.json());
 app.use(session.session)
@@ -20,9 +28,11 @@ app.use(taskRouter)
 app.use(emailRouter)
 // simple route
 
-
 // set port, listen for requests
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}.`);
 });
+
+
+

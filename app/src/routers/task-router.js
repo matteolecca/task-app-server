@@ -54,13 +54,15 @@ router.get('/tasks', async (req, res) => {
 
 
 router.get('/allTasks', async (req, res) => {
-    if (!req.session.user) {
-        return res.status(400).send("Please login again")
-    }
-        database.getUserTasks( req.session.user.ID, (error, result) => {
+    // console.log(req.session.user)
+    // if (!req.session.user) {
+    //     return res.status(400).send("Please login again")
+    // }
+        database.getUserTasks(271, (error, result) => {
             if (error) {              
                 return res.status(400).send(error)
             }
+            console.log(result)
         return res.send(result)     
     })
 })
