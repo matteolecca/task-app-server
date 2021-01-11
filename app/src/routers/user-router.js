@@ -1,132 +1,56 @@
 const express = require('express')
 const router = new express.Router()
-const database = require('../db/database')
-const User = require('../models/user')
-const bycript = require('bcrypt')
-const { use } = require('bcrypt/promises')
-const scheduler = require('../alg/schedule')
-const TokenGenerator = require('uuid-token-generator');
+const dbAsync = require('../db/asyncDB')
+const bcrypt = require('bcrypt')
+const userGenerator = require('../models/user')
+const webToken = require('../helper/webTokenValidator')
 
 
-router.get('/users', (req, res) => {
-    database.getUsers((result, error) => {
-        if (result) return res.send({ users: result })
-        res.status(400).send({ error: "Something went wrong" })
-    })
-})
-
-
-router.post('/', (req, res) => {
-    console.log("Token chehcjed")
-    database.checkToken(req.body.token, (error,result)=>{
-       if(error) return res.status(400).send()
-       req.session.user = result[0]
-       req.opp = 1
-       return res.send(req.session.user)
-    })
-})
-
-router.post('/user', async (req, res) => {
+router.post('/signup', async (req, res) => {
+    const existingUser = await dbAsync.getUserByEmail(req.body.email)
+    if (existingUser) return res.status(200).send({ error: "A user with this email address already exists" })
+    let user = null
     try {
-        let user = await User.user(req.body)
-        const tokenGen = new TokenGenerator()
-        user.token = tokenGen.generate()
-        database.createUser(user, (error, result) => {
-            if (result) {
-                user.ID = result.insertId
-                user.hoursperday = parseInt(user.hoursperday)
-                req.session.user = user
-                req.opp = 1
-                return res.status(200).send(user)
-            }
-            else if (error) {
-                return res.status(400).send({ error: "Something went wrong insertin new user" })
-
-            }
-        })
-    } catch (error) {
-        return res.status(400).send({ error: error.message })
+        user = await userGenerator(req.body)
     }
-
-   
+    catch (error) {
+        return res.status(400).send(error.message)
+    }
+    const result = await dbAsync.createUser(user)
+    if (result.error) return res.status(400).send(result)
+    user.id = result.insertId
+    user.token =  webToken.generateToken(result.insertId)
+    return res.send(user)
 })
 
 router.post('/login', async (req, res) => {
-
-    database.getUser(req.body.email, (error, result) => {
-        if (result) {
-            try{
-                const isPasswordValid = bycript.compareSync(req.body.password, result[0].password)
-                if (isPasswordValid) {
-                    req.session.user = result[0]
-                    req.opp = 1
-                    return res.status(200).send(result[0])
-                }
-
-                return res.status(400).send({error:  "Invalid password"})
-            }
-            catch(error){
-                return res.status(400).send({error : "Bycript"})            
-            }
-            
-        }
-        else if (error) {
-            return res.status(400).send({ error: "Something went wrong  logging you in" })
-        }
-    })
+    const user = await dbAsync.getUserByEmail(req.body.email)
+    console.log("user", user)
+    if (!user) return res.status(200).send({ error: "Invalid password or email" })
+    if (user.error != undefined) return res.status(400).send(user.error)
+    const isPasswordValid = await bcrypt.compare(req.body.password, user.password)
+    if (isPasswordValid) {
+        user.token =  webToken.generateToken(user.ID)
+        return res.send(user)
+    }
+    return res.status(200).send({ error: "Invalid password or email" })
 })
+
+router.get('/user/:token', async (req, res) => {
+    const token =  webToken.validateToken(req.params.token)
+    console.log('Token', token)
+    const user = await dbAsync.getUser(token.id)
+    console.log('User', user)
+    if(user.error) return res.send({logged : false})
+    return res.send({user:user, logged : true})
+})
+
+router.post('/resetpassword',async (req,res)=>{
+    const token =  webToken.validateToken(req.body.token)
+    if(token.error) return res.status.send(token.error)
+    const result  = await dbAsync.resetPassword(req.body.password, token.id)
+    if (result.error) return res.status(400).send(result)
+    return res.send()
+})
+
 module.exports = router
-
-//Update request sent when user change information
-router.post('/update', async (req, res)=>{
-    let user
-    try {
-        //Validate values inserted
-        //Store result in user variable
-        user = await User.userUpdate(req.body,req.session.user.ID)
-    } catch (error) {
-        return res.status(400).send({ error: "Invalid email" })
-    }
-    //Database function to update user record
-    db.updateUser(user, (error)=>{
-        if (error) return res.status(400).send(error)
-        else {
-            //User info modified therefore new scheduling needed       
-            scheduler.scheduleTasks(user, () => {
-                req.session.user.hoursperday = parseInt(req.body.hoursperday)
-                req.session.opp = 1
-                return res.send(user)
-            })
-        }
-    })
-})
-
-
-router.post('/updateUser', async (req, res) => {
-   if(req.session.user == undefined)return res.status(400).send()
-
-    let value = req.body.value
-    let type = req.body.type
-
-    if(type === "password") {
-        value  = await bycript.hash(req.body.value, 8)
-    }
-    if(type === "hoursperday"){
-        req.session.user.hoursperday = value
-    }
-    database.updateUserData(value,type,req.session.user.ID,(result,error)=>{
-       if(error) return res.status(400).send()
-            scheduler.scheduleTasks(req.session.user, (schedule) => {
-            return res.send()
-       })
-        
-    })
-})
-
-router.post('/logout', async (req, res) => {
-    console.log(req.session)
-    delete req.session.user 
-    console.log(req.session)
-    res.send()
-})
-

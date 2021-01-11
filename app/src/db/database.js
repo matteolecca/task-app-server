@@ -36,14 +36,14 @@ exports.checkToken = ((token, callback) => {
     })
 })
 //Create new task
-exports.createTask = ((task, hoursperday, callback) => {
+exports.createTask = ((task,userID,  hoursperday, callback) => {
     let query = "INSERT INTO tasks (start_date, end_date, text, color, user, deadline, priority, mintimeperday) VALUES (? ,?, ?, ?, ?, ?, ?, ?)"
     // query += ""
     let date1 = new Date(task.end_date);
     let date2 = new Date(task.start_date);
     let Difference_In_Time = date1.getTime() - date2.getTime();
     let Difference_In_Days = (Difference_In_Time / (1000 * 3600 * 24)) * hoursperday ;
-    let data = [task.start_date, task.end_date, task.text, task.color, task.user, Difference_In_Days + hoursperday, task.priority, 1]
+    let data = [task.start_date, task.end_date, task.text, task.color, userID, Difference_In_Days + hoursperday, task.priority, 1]
     db.query(query, data, function (error, result) {
         if (error) {
             return callback(error)
