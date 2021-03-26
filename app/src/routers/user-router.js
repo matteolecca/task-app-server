@@ -40,8 +40,10 @@ router.post('/login', async (req, res) => {
 
 router.get('/user/:token', async (req, res) => {
     const token =  webToken.validateToken(req.params.token)
+    console.log(token)
     if(token.error)return res.send({logged : false})
     const user = await dbAsync.getUser(token.id)
+    console.log(user)
     if(user.error) return res.send({logged : false})
     delete user.password
     return res.send({logged : true, user : user})
