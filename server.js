@@ -12,7 +12,7 @@ const { __esModule } = require("validator/lib/isAlpha");
 //Select website that can access the API
 const cors = require('cors')
 var corsOptions = {
-    origin : [ 'http://localhost:3000','http://192.168.1.146:3000/', ],
+    origin : [ 'http://localhost:3000','http://192.168.1.146:3000', ],
     credentials:true,
     methods:['GET','POST'],
     sameSite : 'none'
