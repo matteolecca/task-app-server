@@ -2,7 +2,6 @@ const bcrypt = require ('bcrypt')
 const validator = require ('validator')
 
 const createUser = async (userdata) =>{
-    console.log(userdata)
     if(!validator.isEmail(userdata.email)){
         throw new Error('INVALID EMAIL')
     }

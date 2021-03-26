@@ -10,7 +10,6 @@ exports.getUserByEmail = async userEmail =>{
 exports.getUser = async userID =>{
     const query = 'SELECT * FROM users where ID = ?'
     const result = await tryCcatch(query,userID, true)
-    console.log(result)
     return result
 }
 
@@ -54,7 +53,6 @@ exports.getCompletedTasks = userID =>{
     const query = 'SELECT * FROM tasks WHERE completed = 1 and user = ?'
     const params = [userID]
     const result = tryCcatch(query, params)
-    console.log(result)
     return result    
 }
 
@@ -112,7 +110,7 @@ exports.updateUserData = async (user, value, type) =>{
     query += "= ? WHERE ID = ?"
     const params = [value, user]
     const result = await tryCcatch(query, params)
-    console.log(result)
+    return result
 }
 
 
@@ -127,3 +125,6 @@ const tryCcatch = async (query, params, deeper) => {
     if (deeper) return result[0][0]
     return result[0]
 }
+
+
+//create table users (ID integer not null auto_increment primary key, name varchar(100), email varchar(100), password varchar(100), hoursperday integer not null);

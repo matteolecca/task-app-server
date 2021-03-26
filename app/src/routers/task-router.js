@@ -9,7 +9,6 @@ const webToken = require('../helper/webTokenValidator')
 
 //Post function when new task is added
 router.post('/task/:token', async (req, res) => {
-    console.log(req.body)
     const token = webToken.validateToken(req.params.token)
     if (!token) return res.status(401).send({ error: 'Please login again' })
     const hpd = await dbAsync.getUserHoursperday(token.id)
@@ -39,7 +38,6 @@ router.get('/taskscount/:token', async (req, res) => {
     const token = webToken.validateToken(req.params.token)
     const tasks = await dbAsync.getTasksCount(token.id)
     if (tasks.error) return res.status(400).send()
-    console.log("TASKS COUNT", tasks)
     return res.send(tasks)
 })
 
@@ -56,7 +54,6 @@ router.post('/completetask/:token/:taskID', async (req, res) => {
     const token = webToken.validateToken(req.params.token)
     const taskID = req.params.taskID
     const result = await dbAsync.setTaskCompleted (token.id, taskID)
-    console.log(result, 'Taskc ompketed')
     const update = await scheduleTasks(token.id)
     if (result.error) return res.status(400).send({ error: "Error updating task" })
     return res.send()
@@ -78,14 +75,12 @@ const scheduleTasks = async userID =>{
 //Post function when user edit existing task
 router.post('/edit/:token', async (req, res) => {
     let task = {...req.body}
-    console.log("Task", task)
     const token = webToken.validateToken(req.params.token)
     if(!token) return res.status(400).send()
     const hpd = await dbAsync.getUserHoursperday(token.id)
     const result = await dbAsync.updateTask(task,hpd.hoursperday)
     if(result.error) return res.status(400).send()
     const update = await scheduleTasks(token.id)
-    console.log(update)
     return res.send('OK')
 })
 

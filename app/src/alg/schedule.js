@@ -7,12 +7,10 @@ exports.scheduleTasks = (async (user, callback) => {
     //Get user hoursperday 
     const hpd = await asyncDB.getUserHoursperday(user.ID)
     user.hoursperday = parseInt(hpd.hoursperday)
-    console.log(hpd)
     //Filter user task to get only actives
 
     const activeTasks = await asyncDB.getFilteredTasks(user.ID, 'active')
     if (activeTasks.length === 0) return []
-
     let timeslot = activeTasks[0].deadline
     let sumPriority = 0
     //For each task of the list
@@ -52,7 +50,7 @@ const getTasksToUpdate = async (listUpdated, user, timeslot) =>{
         }
         return {hoursperday : hoursPerDay, ID : element.ID }
     })
-    console.log('Returning tasks to update...')
+    console.log('Returning tasks to update...', tasksToUpdate)
     return tasksToUpdate
 }
 

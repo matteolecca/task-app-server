@@ -8,7 +8,6 @@ const scheduler = require('../alg/schedule')
 
 
 router.post('/signup', async (req, res) => {
-    console.log(req.body)
     const existingUser = await dbAsync.getUserByEmail(req.body.email)
     if (existingUser) return res.status(200).send({ error: "A user with this email address already exists" })
     let user = null
@@ -40,7 +39,6 @@ router.post('/login', async (req, res) => {
 })
 
 router.get('/user/:token', async (req, res) => {
-    console.log("CHECK USER", req.params.token)
     const token =  webToken.validateToken(req.params.token)
     if(token.error)return res.send({logged : false})
     const user = await dbAsync.getUser(token.id)

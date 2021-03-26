@@ -1,16 +1,17 @@
 //Database configuration
 
 require('dotenv').config()
+
 module.exports = {
-    HOST: process.env.HOST,
-    USER: process.env.DB_USER,
-    PASSWORD: process.env.PASSWORD,
-    DB: process.env.DB
+    HOST: 'us-cdbr-east-03.cleardb.com',
+    USER: 'b7838544dc13fd',
+    PASSWORD: 'ccefe349',
+    DB: 'heroku_935fc282359b2d5'
 };
 
 
 //Connect DB via terminal MYSQL
+//mysql --host=us-cdbr-east-03.cleardb.com --user=b7838544dc13fd --password=ccefe349 --reconnect heroku_935fc282359b2d5
 
 
-//mysql --host=us-cdbr-east-02.cleardb.com --user=b3cc0996cbc46f --password=22721ae4 --reconnect heroku_ddaec690967f493
 
