@@ -22,7 +22,7 @@ router.post('/task/:token', async (req, res) => {
 router.get('/tasks/:token/:type', async (req, res) => {
     const token = webToken.validateToken(req.params.token)
     if(token.error){ return res.status(401).send({logged : false})}
-    const update = await scheduleTasks(token.id)
+    // const update = await scheduleTasks(token.id)
     const tasks = await dbAsync.getFilteredTasks(token.id, req.params.type)
     if (tasks.error) return res.status(400).send()
     return res.send(tasks)
@@ -61,11 +61,11 @@ router.post('/completetask/:token/:taskID', async (req, res) => {
 
 
 const scheduleTasks = async userID =>{
+    console.log('SCheduling')
     const schedule = await scheduler.scheduleTasks({ID:userID})
     if(schedule.error)return res.status(400).send(schedule)
     console.log("Schedule returned to server")
     for(const index in schedule){
-        console.log('Updating in server...')
         const update = await dbAsync.updateTasksHours(schedule[index].ID, schedule[index].hoursperday)
         if(update.error) return ({error : 'Error updating'})
     }

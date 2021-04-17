@@ -35,7 +35,7 @@ router.post('/login', async (req, res) => {
         delete user.password
         return res.send(user)
     }
-    return res.status(200).send({ error: "Invalid password or email" })
+    return res.status(400).send({ error: "Invalid password or email" })
 })
 
 router.get('/user/:token', async (req, res) => {
