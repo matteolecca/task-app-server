@@ -18,7 +18,6 @@ var corsOptions = {
     sameSite : 'none'
 }
 app.use(cors(corsOptions));
-
 // parse requests of content-type - application/json
 app.use(bodyParser.json());
 // app.use(session.session)

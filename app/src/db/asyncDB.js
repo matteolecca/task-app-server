@@ -36,16 +36,18 @@ exports.createTask =  async (task,userID,  hoursperday) => {
 }
 
 exports.getFilteredTasks = async (ID,type) => {
+    console.log(ID)
     let today = dateFormat(new Date().toString(), "yyyy-mm-dd")
     let query = ''
     if (type==='active') query = 'SELECT * FROM tasks WHERE user = ? and completed = 0 and DATE(start_date) <= ? and DATE(end_date) >= ? ORDER BY deadline ASC'
     if(type === 'scheduled') query = 'SELECT * FROM tasks WHERE user = ? and DATE(start_date) > ? and DATE(end_date) > ? ORDER BY deadline ASC'
-    if(type === 'passed') query = 'SELECT * FROM tasks WHERE user = ? and (DATE(start_date) < ? and DATE(end_date) < ?) OR completed = 1 ORDER BY deadline ASC LIMIT 10'
+    if(type === 'passed') query = 'SELECT * FROM tasks WHERE user = ? and ((DATE(start_date) < ? and DATE(end_date) < ?) OR completed = 1) ORDER BY deadline ASC LIMIT 10'
     if(type === 'completed') query = 'SELECT * FROM tasks WHERE user = ? and completed = 1'
     if(type === 'uncompleted') query = 'SELECT * FROM tasks WHERE user = ? and completed = 0'
     if(type === 'all') query = 'SELECT * FROM tasks WHERE user = ?'
     const params = [ID, today, today]
     const result = await tryCcatch(query, params) 
+    console.log(type, result)
     return result
 }
 

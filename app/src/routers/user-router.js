@@ -9,7 +9,7 @@ const scheduler = require('../alg/schedule')
 
 router.post('/signup', async (req, res) => {
     const existingUser = await dbAsync.getUserByEmail(req.body.email)
-    if (existingUser) return res.status(200).send({ error: "A user with this email address already exists" })
+    if (existingUser) return res.status(403).send({ message:  "A user with this email address already exists" })
     let user = null
     try {
         user = await userGenerator(req.body)
@@ -27,15 +27,18 @@ router.post('/signup', async (req, res) => {
 
 router.post('/login', async (req, res) => {
     const user = await dbAsync.getUserByEmail(req.body.email)
-    if (!user) return res.status(200).send({ error: "Invalid password or email" })
-    if (user.error != undefined) return res.status(400).send(user.error)
+    if (!user) {
+        return res.status(401).send({ message: "Invalid password or email" })}
+    if (user.error != undefined) {
+        console.log(user.error)
+        return res.status(401).send({ message: "Invalid password or email" })}
     const isPasswordValid = await bcrypt.compare(req.body.password, user.password)
     if (isPasswordValid) {
         user.token =  webToken.generateToken(user.ID)
         delete user.password
         return res.send(user)
     }
-    return res.status(400).send({ error: "Invalid password or email" })
+    return res.status(401).send({ message: "Invalid password or email" })
 })
 
 router.get('/user/:token', async (req, res) => {
@@ -43,7 +46,7 @@ router.get('/user/:token', async (req, res) => {
     console.log(token)
     if(token.error)return res.send({logged : false})
     const user = await dbAsync.getUser(token.id)
-    console.log(user)
+    if(!user)return res.send({logged : false})
     if(user.error) return res.send({logged : false})
     delete user.password
     return res.send({logged : true, user : user})
