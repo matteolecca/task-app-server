@@ -1,7 +1,5 @@
 const express = require('express')
 const router = new express.Router()
-const database = require('../db/database')
-const dateFormat = require('dateformat');
 const scheduler = require('../alg/schedule')
 const dbAsync = require('../db/asyncDB')
 const webToken = require('../helper/webTokenValidator')

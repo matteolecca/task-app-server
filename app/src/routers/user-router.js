@@ -43,7 +43,6 @@ router.post('/login', async (req, res) => {
 
 router.get('/user/:token', async (req, res) => {
     const token =  webToken.validateToken(req.params.token)
-    console.log(token)
     if(token.error)return res.send({logged : false})
     const user = await dbAsync.getUser(token.id)
     if(!user)return res.send({logged : false})
@@ -69,6 +68,7 @@ router.post('/resetpassword',async (req,res)=>{
     if (result.error) return res.status(400).send(result)
     return res.send()
 })
+
 const scheduleTasks = async userID =>{
     const schedule = await scheduler.scheduleTasks({ID:userID})
     if(schedule.error)return res.status(400).send(schedule)

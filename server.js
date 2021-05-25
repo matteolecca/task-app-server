@@ -1,13 +1,10 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const database = require('./app/src/db/database')
-const bycript = require('bcrypt')
+const helmet = require("helmet");
 const app = express();
 const userRouter = require('./app/src/routers/user-router')
 const taskRouter = require('./app/src/routers/task-router')
 const emailRouter = require('./app/src/routers/password-recovery-router')
-// const session = require('./app/src/session/session')
-const { __esModule } = require("validator/lib/isAlpha");
 
 //Select website that can access the API
 const cors = require('cors')
@@ -17,6 +14,8 @@ var corsOptions = {
     methods:['GET','POST'],
     sameSite : 'none'
 }
+
+app.use(helmet())
 app.use(cors(corsOptions));
 // parse requests of content-type - application/json
 app.use(bodyParser.json());

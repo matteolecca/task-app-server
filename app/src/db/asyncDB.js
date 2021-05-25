@@ -115,6 +115,12 @@ exports.updateUserData = async (user, value, type) =>{
     return result
 }
 
+exports.resetPwd = async ( email, password) =>{
+    const query = 'UPDATE users set password = ? where email = ?'
+    const result = await tryCcatch(query, [ password, email])
+    return result
+}
+
 
 const tryCcatch = async (query, params, deeper) => {
     let result = null

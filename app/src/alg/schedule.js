@@ -1,4 +1,3 @@
-var database = require("../db/database");
 var asyncDB = require('../db/asyncDB')
 var rounder = require("./round")
 //Scheduling algorithm
